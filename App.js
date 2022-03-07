@@ -56,6 +56,14 @@ export default function App() {
     const json = await response.json();
 
     setDays(json.daily);
+  };
+
+  const dateString = (dt) => {
+    return new Date(dt*1000).toString().substring(0,10);
+  };
+
+  const tempString = (temp) => {
+    return parseFloat(temp).toFixed(1).toString();
   }
 
   useEffect(() => {
@@ -80,7 +88,7 @@ export default function App() {
           <View style={{...styles.day, alignItems: "center"}}>
             <ActivityIndicator
               color="white"
-              style={{ marginTop: 10}}
+              style={styles.indicator}
               size="large"
             />
           </View>
@@ -91,28 +99,23 @@ export default function App() {
               style={styles.day}
             >
               <Text style={styles.date}>
-                {new Date(day.dt*1000).toString().substring(0,10)}
+                { dateString(day.dt) }
               </Text>
               <View 
-                style={{
-                  flexDirection: "row",
-                  alignContent: "center",
-                  width: "100%",
-                  justifyContent: "space-between",
-                }}
+                style={ styles.contents }
               >
                 <View>
-                <Text style={styles.temp}>
-                  <Text>
-                  {`${parseFloat(day.temp.day).toFixed(1)}`}
+                  <Text style={styles.temp}>
+                    <Text>
+                    {tempString(day.temp.day)}
+                    </Text>
+                    <Text style={styles.tempUnit}>
+                      {" ℃"}
+                    </Text>
                   </Text>
-                  <Text style={{fontSize: 40}}>
-                    {" ℃"}
-                  </Text>
-                </Text>
                 </View>
                 <Fontisto
-                  style={{marginTop: 50}}
+                  style={styles.weatherIcon}
                   name={icons[day.weather[0].main]}
                   size={68}
                   color="white"
@@ -120,7 +123,6 @@ export default function App() {
               </View>
               <Text style={styles.description}>{day.weather[0].main}</Text>
               <Text style={styles.tinyText}>{day.weather[0].description}</Text>
-              
             </View>
           ))
         )}
@@ -172,5 +174,20 @@ const styles = StyleSheet.create({
     color: "white",
     marginTop: 5,
     fontWeight: "500",
+  },
+  contents: {
+    flexDirection: "row",
+    alignContent: "center",
+    width: "100%",
+    justifyContent: "space-between",
+  },
+  indicator: {
+    marginTop: 10,
+  },
+  weatherIcon: {
+    marginTop: 50
+  },
+  tempUnit: {
+    fontSize: 40,
   }
 });
